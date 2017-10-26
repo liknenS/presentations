@@ -1,0 +1,590 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="css/theme/nik.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Frontend State management</h1>
+					<h3>(Redux)</h3>
+					<p>
+						<small>Created by Nik Nikitenok / <a href="https://twitter.com/NNikitenok">@NNikitenok</a></small>
+					</p>
+				</section>
+				<section>
+					<h2>Types of Frontend generation</h2>
+					<ol>
+						<li class="fragment">Server rendering</li>
+						<li class="fragment">Incremental rendering</li>
+						<li class="fragment">Single page application(SPA)</li>
+					</ol>
+				</section>
+				<section>
+					<section>
+						<h2>Server rendering</h2>
+
+						<div class='row'>
+							<div class="left-col">
+								<p>
+									Generatin HTML by server template engine.
+								</p>
+								<p>
+									<bold>Template engine</bold> - is software designed to combine templates with a data model to produce result documents
+								</p>
+							</div>
+							<img src='assets/440px-TempEngGen015.svg.png' height="400">
+						</div>
+					</section>
+					<section>
+						<h2>System elements</h2>
+						<p>All template processing systems consist of at least these primary elements:</p>
+						<ul>
+							<li>an associated data model</li>
+							<li>one or more source templates</li>
+							<li>a processor or template engine</li>
+							<li>generated output in the form of result documents.</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Data to view flow</h2>
+						<ul>
+							<li><bold>Data</bold> stored on the server</li>
+							<li>Server prepares the <bold>data</bold> for display</li>
+							<li>Template engine create view by <bold>date</bold></li>
+						</ul>
+					</section>
+					<section>
+						<h2>Languages</h2>
+						<ul>
+							<li class="fragment">PHP (by language)</li>
+							<li class="fragment">Java (JSP, Velocity, FreeMarker)</li>
+							<li class="fragment">JS (Handlebars, Pug/Jade)</li>
+							<li class="fragment">C# (Razor, DotLiquid, NHaml)</li>
+						</ul>
+					</section>
+					<section>
+						<h2>PUG example</h2>
+						<div class="fragment">
+							<p>template.pug</p>
+							<pre><code class="hljs" data-trim contenteditable>
+								p #{name}'s Pug source code!
+							</code></pre>
+						</div>
+						<div class="fragment">
+							<p>Js</p>
+							<pre><code class="hljs" data-trim contenteditable>
+								const pug = require('pug');
+								console.log(pug.renderFile('template.pug', {
+								  name: DB.getUserName()
+								}));
+							</code></pre>
+						</div>
+						<div class="fragment">
+							<p>Result</p>
+							<pre><code class="hljs" data-trim contenteditable>
+								<p>Timothy's Pug source code!</p>
+							</code></pre>
+						</div>
+					</section>
+					<section>
+						<h2>JSP example</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							<p>Counting to three:</p>
+							<% for (int i=1; i<4; i++) { %>
+							    <p>This number is <%= i %>.</p>
+							<% } %>
+							<p>OK.</p>
+						</code></pre>
+					</section>
+					<section>
+						<h2>Profits</h2>
+						<ul>
+							<li class="fragment">Work withut JS</li>
+							<li class="fragment">Search robots</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Problems</h2>
+						<ul>
+							<li class="fragment">Large network trafic</li>
+							<li class="fragment">Static content</li>
+							<li class="fragment">Bad user experience</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Incremental rendering</h2>
+						<p>
+							Manual update DOM by changing data (or user action).
+						</p>
+						<img src='assets/jQuery.svg' height="400" >
+					</section>
+					<section>
+						<h2>Data to view flow</h2>
+						<ul>
+							<li><bold>Data</bold> stored in closures, glogal scope or in html attributes</li>
+							<li>Event triger update function</li>
+							<li>Function make point update via DOM manipulating</li>
+						</ul>
+					</section>
+					<section>
+						<h2>ways</h2>
+						<ul>
+							<li class="fragment">Valina JS</li>
+							<li class="fragment">jQuery</li>
+							<li class="fragment">Backbone</li>
+							<li class="fragment">Other lib helping work with DOM</li>
+						</ul>
+					</section>
+					<section>
+						<div>
+							<h2>Profits</h2>
+							<ul class="fragment">
+								<li>Adding interaction on page</li>
+								<li class="fragment">Good for small/simple applicalions</li>
+							</ul>
+						</div>
+
+						<div class="fragment">
+							<h2>Problems</h2>
+							<ul>
+								<li class="fragment">Hard to scale</li>
+							</ul>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>SPA</h2>
+						<p>
+							Single-Page Applications (SPAs) are Web apps that load a single HTML page and dynamically update that page as the user interacts with the app.
+						</p>
+						<img src="assets/spa.jpg" height="300">
+					</section>
+					<section>
+						<h2>MVC</h2>
+							<img src="assets/MVC-Process.png" height="350" alt="">
+					</section>
+					<section>
+						<h2>frameworks</h2>
+						<ul>
+							<li class="fragment">Angular(AngularJs)</li>
+							<li class="fragment">Vue.js</li>
+							<li class="fragment">Ember</li>
+							<li class="fragment">React <span  class="fragment">(bud with adding libraries)</span></li>
+						</ul>
+					</section>
+					<section>
+						<h2>Data to view flow</h2>
+						<ul>
+							<li><bold>Data</bold> stored in Model($scope, store and etc.)</li>
+							<li><bold>Data</bold> updated via special mhetods</li>
+							<li>
+								Changing model triger rerender needed parts
+								<ul>
+									<li>By data binding</li>
+									<li>Rerender all to VDOM and update needed parts</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Overview and compare libraries</h2>
+					<ul>
+						<li class="fragment">Backbone.Model</li>
+						<li class="fragment">AngularJs $scope</li>
+						<li class="fragment">
+							VDOM librares
+							<ul class="fragment">
+								<li>CycleJs</li>
+								<li class="fragment">MobX</li>
+								<li class="fragment">Redux</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Backbone.Model</h2>
+						<p>Event based data management</p>
+					</section>
+					<section>
+						<pre><code class="hljs" data-trim contenteditable>
+							var Book = Backbone.Model.extend(options);
+							var book = new Book();
+							book.on({
+							  "change:title": titleView.update,
+							  "change:author": authorPane.update,
+							  "destroy": bookView.remove
+							});
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>AngularJs $scope</h2>
+						<p>Two-way databinding</p>
+						<p>
+							Scope is an object that refers to the application model. It is an execution context for expressions. Scopes can watch expressions and propagate events.
+						</p>
+					</section>
+					<section>
+						<h2>$watch</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							Scope.prototype.$watch = function(watchFn, listenerFn) {
+							  var watcher = {
+							    watchFn: watchFn,
+							    listenerFn: listenerFn
+							  };
+							  this.$$watchers.push(watcher);
+							};
+						</code></pre>
+					</section>
+					<section>
+						<h2>$$digestOnce(helper)</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							Scope.prototype.$$digestOnce = function() {
+							  var self  = this;
+							  var dirty;
+							  for(var watch of this.$$watchers) {
+							    var newValue = watch.watchFn(self);
+							    var oldValue = watch.last;
+							    if (newValue !== oldValue) {
+							      watch.listenerFn(newValue, oldValue, self);
+							      dirty = true;
+							    }
+							    watch.last = newValue;
+							  }
+							  return dirty;
+							};
+						</code></pre>
+					</section>
+					<section>
+						<h2>$digest</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							Scope.prototype.$digest = function() {
+							  var dirty;
+							  do {
+							    dirty = this.$$digestOnce();
+							  } while (dirty);
+							};
+						</code></pre>
+					</section>
+					<section>
+						<h2>$apply</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							Scope.prototype.$apply = function(fn) {
+							  fn()
+							  this.$digest()
+							};
+						</code></pre>
+					</section>
+					<section>
+						<h2>digest lifecycle</h2>
+						<img src="assets/angula-cycle.png">
+					</section>
+					<section>
+						<h2>Template</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							<div ng-app>
+							  <label>Name:</label>
+							  <input type="text" ng-model="yourName">
+							  <hr>
+							  <h1>Hello {{yourName}}!</h1>
+						 </div>
+						</code></pre>
+						<p>AngularJS atomatic create watcher for update html by changing $scope.yourName</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>MobX</h2>
+						<p>Based on JS Observable</p>
+					</section>
+
+					<section>
+						<h2>@obsevable</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							calss Person {
+							  @obsevable firstNmae = 'Vasya';
+							  @obsevable lastName = 'Pupkin';
+							  @obsevable nickname;
+							}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>@computed</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							calss Person {
+							  //...
+							  @computed get fullName() {
+							    retrun this.firstNmae + ' ' + this.lastName
+							  }
+							}
+						</code></pre>
+					</section>
+					<section>
+						<h2>@action</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							calss Person {
+							  //...
+							  @action setNickName(nickName) {
+							    retrun this.nickName = nickName
+							  }
+							}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>autorun</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							autorun(function (){
+							  console.log(person.nickName || person.fullName)
+							})
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Dependencies tree</h2>
+						<img src="assets/tree-1.jpeg" alt="">
+					</section>
+
+					<section>
+						<h2>autorun</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							autorun(function (){
+							  console.log(person.nickName || person.fullName)
+							})
+						</code></pre>
+					</section>
+					<section>
+						<h2>change</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							person.setNickName('Big russian boss')
+						</code></pre>
+						<pre class="fragment"><code class="hljs" data-trim contenteditable>
+							autorun(function (){
+							  console.log(person.nickName || person.fullName)
+							})
+						</code></pre>
+					</section>
+
+					<section>
+						<p>Obsevable fields</p>
+						<ul style="color: red">
+							<li>person.nickName</li>
+						</ul>
+						<p>Ignored fields</p>
+						<ul style="color: lightgray">
+							<li>person.fullName</li>
+							<li>person.firstName</li>
+							<li>person.lastName</li>
+						</ul>
+
+					</section>
+					<section>
+						<h2>Dependencies tree</h2>
+						<img src="assets/tree-2.jpeg" alt="">
+					</section>
+
+					<section>
+						<h2>profits</h2>
+						<ul>
+							<li>Minimum bolerplate</li>
+							<li>Auto subscribe in runtime</li>
+							<li>Performace from the Box</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>CycleJs</h2>
+						<p>Framework based on RxJS strems</p>
+						<img class="fragment" src="assets/cycleJs.png" height="400">
+					</section>
+					<section>
+						<h2>CycleJs app</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							import { run } from '@cycle/run';
+							run(main, {
+							  DOM: makeDOMDriver('#main')
+							});
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>create data stream</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							import xs from 'xstream';
+						</code></pre>
+						<div class="fragment" >
+							<pre><code class="hljs" data-trim contenteditable>
+								function main(sources) {
+								  const action$ = xs.merge(
+								    sources.DOM.select('.decrement')
+								      .events('click').map(ev => -1),
+								    sources.DOM.select('.increment')
+								      .events('click').map(ev => +1)
+								  );
+								  const count$ = action$.fold((acc, x) => acc + x, 0);
+								  // ...
+								}
+							</code></pre>
+						</div>
+					</section>
+					<section>
+						<h2>create dom stream</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							import { div, button, p } from '@cycle/dom';
+						</code></pre>
+						<div class="fragment" >
+							<pre><code class="hljs" data-trim contenteditable>
+								function main(sources) {
+								  // ...
+								  const vdom$ = count$.map(count =>
+								    div([
+								      button('#minus', 'Decrement'),
+								      button('#plus', 'Increment'),
+								      p('Counter: ' + count)
+								    ])
+								  );
+								   return {
+								    DOM: vdom$,
+								  };
+								}
+							</code></pre>
+						</div>
+					</section>
+					<section>
+						<h2>schema</h2>
+						<img src="assets/draw-cycle.gif" height="500">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Redux</h2>
+						<img style="border:none; box-shadow:none" src="assets/redux.png" height="300">
+					</section>
+					<section>
+						<h2>Principles</h2>
+						<ul>
+							<li>Single source of truth</li>
+							<li>State is read-only</li>
+							<li>Changes are made with pure functions</li>
+						</ul>
+					</section>
+					<section>
+						<h2>action</h2>
+						<ul>
+							<li>Action is simpe Javavasctiopt Object.</li>
+							<li>Action must have property <bold>type</bold></li>
+							<li>Action data placed in <bold>payload</bold></li>
+						</ul>
+						<pre><code class="hljs" data-trim contenteditable>
+							var increment = {
+							  type: 'INCREMENT',
+							}
+							var add = val => {
+							  return {
+							    type: 'ADD',
+							    payload: 6
+							  }
+							}
+						</code></pre>
+					</section>
+					<section>
+						<h2>reducer</h2>
+						<ul>
+							<li>Reducer is pure function</li>
+							<li>Reducer can be combined</li>
+						</ul>
+						<pre><code class="hljs" data-trim contenteditable>
+							 var reducer = (state = 0, action) => {
+							  switch (action.type) {
+							    case 'INCREMENT':
+							      return state + 1
+							    case 'ADD':
+							      return state - action.payload
+							    default:
+							      return state
+							  }
+							}
+						</code></pre>
+					</section>
+					<section>
+						<h2>example</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+							const store = createStore(reducer)
+							console.log(store.getState()) // 0
+
+							store.subscribe(console.log(store.getState()))
+
+							store.dispatch(increment) // 1
+							store.dispatch(add(6)) // 7
+						</code></pre>
+					</section>
+					<section>
+						<h2>Flow</h2>
+						<img src="assets/redux-flow.gif" height="500"
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide',
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'http://192.168.100.4:3001/socket.io/socket.io.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/remote-control/remote.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

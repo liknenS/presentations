@@ -381,6 +381,16 @@ Reveal.addEventListener( 'customevent', function() {
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
+		<style>
+		.bola {
+			position: fixed;
+			z-index: 100;
+			height: 30px;
+			width:  30px;
+			border-radius: 50%;
+			background-color: rgba(255,0,0,0.5)
+		}
+		</style>
 
 		<script>
 
@@ -400,7 +410,9 @@ Reveal.addEventListener( 'customevent', function() {
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'http://192.168.100.4:3001/socket.io/socket.io.js', async: true },
+					{ src: 'plugin/remote-control/remote.js', async: true }
 				]
 			});
 
